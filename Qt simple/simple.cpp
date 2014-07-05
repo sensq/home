@@ -11,6 +11,7 @@ simple::simple(QWidget *parent)
 	ui.lineEdit->setText(QString::number(2));
 	ui.lineEdit_2->setText(QString::number(3));
 	ui.lineEdit_3->setText(QString::number(5));
+	int a = 0;
 }
 // デストラクタ
 simple::~simple()
