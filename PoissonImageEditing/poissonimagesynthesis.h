@@ -29,21 +29,22 @@ public:
 	PoissonImageSynthesis(QWidget *parent = 0);
 	~PoissonImageSynthesis();
 	void poisson();
+	void commonButtonFunction();
 	public slots:
 		void on_setButton_1_clicked();
 		void on_setButton_2_clicked();
 		void on_setButton_3_clicked();
 		void on_setButton_4_clicked();
+		void on_setButton_5_clicked();
 		void on_resetButton_clicked();
 		void on_iterateButton_clicked();
 		void on_checkBox_clicked();
 
 private:
-	cv::Mat base;
-	cv::Mat blend;
-	cv::Mat mask;
-	cv::Mat dst[2];
-	int lMax;
+	cv::Mat base, blend, mask;
+	cv::Mat dst[2];	//!< 出力画像（ImportとMixingで2つ）
+	int lMax;	//!< ループ回数（GUI側で設定）
+	bool rev;	//!< ベースとブレンド画像を入れ替えるフラグ
 
 	void poissonSolver(int lMax, cv::Mat &base, cv::Mat &blend, cv::Mat &dst, cv::Mat &mask = cv::Mat(), bool mix = false, cv::Point2i offset = cv::Point2i(0, 0), bool init = true);
 	void drawForQtLabel(cv::Mat &src, QLabel *label, bool autoResize);

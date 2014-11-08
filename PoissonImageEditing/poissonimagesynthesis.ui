@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>828</width>
-    <height>608</height>
+    <width>821</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>40</y>
+     <y>80</y>
      <width>390</width>
      <height>270</height>
     </rect>
@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>40</y>
+     <y>80</y>
      <width>390</width>
      <height>270</height>
     </rect>
@@ -49,7 +49,7 @@
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>330</y>
+     <y>370</y>
      <width>390</width>
      <height>270</height>
     </rect>
@@ -65,7 +65,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>330</y>
+     <y>370</y>
      <width>390</width>
      <height>270</height>
     </rect>
@@ -81,7 +81,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>20</y>
+     <y>60</y>
      <width>98</width>
      <height>13</height>
     </rect>
@@ -99,7 +99,7 @@
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>20</y>
+     <y>60</y>
      <width>98</width>
      <height>13</height>
     </rect>
@@ -117,7 +117,7 @@
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>310</y>
+     <y>350</y>
      <width>98</width>
      <height>13</height>
     </rect>
@@ -135,7 +135,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>310</y>
+     <y>350</y>
      <width>98</width>
      <height>13</height>
     </rect>
@@ -152,7 +152,7 @@
   <widget class="QPushButton" name="iterateButton">
    <property name="geometry">
     <rect>
-     <x>240</x>
+     <x>70</x>
      <y>10</y>
      <width>75</width>
      <height>23</height>
@@ -165,7 +165,7 @@
   <widget class="QPushButton" name="resetButton">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>150</x>
      <y>10</y>
      <width>75</width>
      <height>23</height>
@@ -178,7 +178,7 @@
   <widget class="QSpinBox" name="spinBox">
    <property name="geometry">
     <rect>
-     <x>180</x>
+     <x>10</x>
      <y>10</y>
      <width>50</width>
      <height>22</height>
@@ -194,7 +194,7 @@
   <widget class="QPushButton" name="setButton_1">
    <property name="geometry">
     <rect>
-     <x>520</x>
+     <x>470</x>
      <y>10</y>
      <width>60</width>
      <height>23</height>
@@ -207,7 +207,7 @@
   <widget class="QPushButton" name="setButton_2">
    <property name="geometry">
     <rect>
-     <x>590</x>
+     <x>540</x>
      <y>10</y>
      <width>60</width>
      <height>23</height>
@@ -220,7 +220,7 @@
   <widget class="QPushButton" name="setButton_3">
    <property name="geometry">
     <rect>
-     <x>660</x>
+     <x>610</x>
      <y>10</y>
      <width>60</width>
      <height>23</height>
@@ -233,7 +233,7 @@
   <widget class="QPushButton" name="setButton_4">
    <property name="geometry">
     <rect>
-     <x>730</x>
+     <x>680</x>
      <y>10</y>
      <width>60</width>
      <height>23</height>
@@ -246,14 +246,72 @@
   <widget class="QCheckBox" name="checkBox">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>420</x>
      <y>10</y>
      <width>47</width>
-     <height>30</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
     <string>反転</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="SORSpinBox">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>10</y>
+     <width>46</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <double>2.000000000000000</double>
+   </property>
+   <property name="singleStep">
+    <double>0.050000000000000</double>
+   </property>
+   <property name="value">
+    <double>1.900000000000000</double>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>40</y>
+     <width>820</width>
+     <height>10</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>10</y>
+     <width>47</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>SOR係数</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="setButton_5">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>10</y>
+     <width>60</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Set 5</string>
    </property>
   </widget>
  </widget>

@@ -4,10 +4,12 @@ PoissonImageSynthesis::PoissonImageSynthesis(QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
-	base = cv::imread("base.png");
-	blend = cv::imread("blend.png");
-	mask = cv::imread("mask.png", 0);
+	base = cv::imread("test1_base.png");
+	blend = cv::imread("test1_blend.png");
+	mask = cv::imread("test1_mask.png", 0);
 	ui.spinBox->setValue(1);
+
+	rev = false;
 
 	drawForQtLabel(base, ui.labelBase, true);
 	drawForQtLabel(blend, ui.labelBlend, true);
@@ -19,62 +21,84 @@ PoissonImageSynthesis::~PoissonImageSynthesis()
 {
 }
 
+/// ベース画像とブレンド画像を入れ替え
 void PoissonImageSynthesis::on_checkBox_clicked()
 {
 	cv::Mat tmp = base.clone();
 	base = blend.clone();
 	blend = tmp.clone();
+	rev = !rev;
 
 	drawForQtLabel(base, ui.labelBase, true);
 	drawForQtLabel(blend, ui.labelBlend, true);
 	poisson();
 }
 
+/// 画像セット1～5読み込み
 void PoissonImageSynthesis::on_setButton_1_clicked()
 {
-	base = cv::imread("base_test1.png");
-	blend = cv::imread("blend_test1.png");
-	mask = cv::imread("mask_test1.png", 0);
-
-	drawForQtLabel(base, ui.labelBase, true);
-	drawForQtLabel(blend, ui.labelBlend, true);
-	poisson();
+	base = cv::imread("test1_base.png");
+	blend = cv::imread("test1_blend.png");
+	mask = cv::imread("test1_mask.png", 0);
+	
+	commonButtonFunction();
 }
-
 void PoissonImageSynthesis::on_setButton_2_clicked()
 {
-	base = cv::imread("base_test2.png");
-	blend = cv::imread("blend_test2.png");
-	mask = cv::imread("mask_test2.png", 0);
-
-	drawForQtLabel(base, ui.labelBase, true);
-	drawForQtLabel(blend, ui.labelBlend, true);
-	poisson();
+	base = cv::imread("test2_base.png");
+	blend = cv::imread("test2_blend.png");
+	mask = cv::imread("test2_mask.png", 0);
+	
+	commonButtonFunction();
 }
-
 void PoissonImageSynthesis::on_setButton_3_clicked()
 {
-	base = cv::imread("base.png");
-	blend = cv::imread("blend.png");
-	mask = cv::imread("mask.png", 0);
-
-	drawForQtLabel(base, ui.labelBase, true);
-	drawForQtLabel(blend, ui.labelBlend, true);
-	poisson();
+	base = cv::imread("test3_base.png");
+	blend = cv::imread("test3_blend.png");
+	mask = cv::imread("test3_mask.png", 0);
+	
+	commonButtonFunction();
 }
-
 void PoissonImageSynthesis::on_setButton_4_clicked()
 {
-	base = cv::imread("base_test3.png");
-	blend = cv::imread("blend_test3.png");
-	mask = cv::imread("mask_test3.png", 0);
+	base = cv::imread("test4_base.png");
+	blend = cv::imread("test4_blend.png");
+	mask = cv::imread("test4_mask.png", 0);
+	
+	commonButtonFunction();
+}
+void PoissonImageSynthesis::on_setButton_5_clicked()
+{
+	base = cv::imread("test5_base.png");
+	blend = cv::imread("test5_blend.png");
+	mask = cv::imread("test5_mask.png", 0);
 
+	commonButtonFunction();
+}
+
+/// 画像セット読み込むときに共通して行う処理
+void PoissonImageSynthesis::commonButtonFunction()
+{
+	// 反転にチェック入ってたらベースとブレンド画像を入れ替え
+	if(rev){
+		cv::Mat tmp = base.clone();
+		base = blend.clone();
+		blend = tmp.clone();
+	}
+	// ベースとブレンド画像をラベルに描画
 	drawForQtLabel(base, ui.labelBase, true);
 	drawForQtLabel(blend, ui.labelBlend, true);
 	poisson();
 }
 
-// 1回の呼び出しで行う計算回数
+/*
+@brief ポアソン方程式を解く関数
+@param lMax 1回の呼び出しで行う計算回数
+@param base, blend, mask ベース画像、ブレンド画像、マスク画像
+@param mix trueでMixing、falseでImport
+@param offset 右と下方向へのずれ
+@param init falseだと前回の合成結果(dst)を入力として使う
+*/
 void PoissonImageSynthesis::poissonSolver(int lMax, cv::Mat &base, cv::Mat &blend, cv::Mat &dst, cv::Mat &mask, bool mix, cv::Point2i offset, bool init)
 {
 	// 処理時間計測用
@@ -82,7 +106,7 @@ void PoissonImageSynthesis::poissonSolver(int lMax, cv::Mat &base, cv::Mat &blen
 	int64 time = cv::getTickCount();
 
 	// 許容誤差
-	static const double EPS = 0.00005;
+	static const double EPS = 0.00001;
 	// 隣接画素数（上下左右だけとするので4つで固定）
 	static const int NUM_NEIGHBOR = 4;
 
@@ -109,6 +133,12 @@ void PoissonImageSynthesis::poissonSolver(int lMax, cv::Mat &base, cv::Mat &blen
 	// 出力画像の初期化
 	if(init)
 		dst = base.clone();
+
+	/* SOR法のパラメータ
+	2以上にすると収束しなくなる
+	1未満だと遅くなるけどガウスザイデルで収束しない場合にも収束させられる
+	収束すると分かっている場合は1.9がよく使われる（？） */
+	double omega = ui.SORSpinBox->value();	// GUI側から値を取得
 
 	// チャンネルごとに処理
 	for (int c = 0; c < blend.channels(); c++){
@@ -159,6 +189,11 @@ void PoissonImageSynthesis::poissonSolver(int lMax, cv::Mat &base, cv::Mat &blen
 						}
 						// 隣接画素値と勾配4つ分の合計 / 隣接画素数
 						fp = (sum_f + sum_vpq)/NUM_NEIGHBOR;
+						/// SOR法( omega=1 のときはガウスザイデルと同じなので無視）
+						if(omega != 1.0){
+							fp = next.at<double>(y+offset.x, x+offset.y) + omega * (fp-next.at<double>(y+offset.x, x+offset.y));
+						}
+
 						// 今回のfpと前回のfpが許容誤差に収まるまで繰り返す
 						error = fabs(fp - next.at<double>(y+offset.x,x+offset.y));
 						// 注目画素の収束判定
@@ -171,8 +206,9 @@ void PoissonImageSynthesis::poissonSolver(int lMax, cv::Mat &base, cv::Mat &blen
 				}
 			}
 			// 収束判定（全画素が収束判定を満たしたら終了）
-			if(ok)
+			if(ok){
 				break;
+			}
 
 			// saturate（0以下は0, 255以上は255にする）
 			for(int y=0; y<dst.rows; y++)
@@ -185,12 +221,9 @@ void PoissonImageSynthesis::poissonSolver(int lMax, cv::Mat &base, cv::Mat &blen
 	std::cout<<(cv::getTickCount()-time)*f<<" [ms]"<<std::endl;
 }
 
-// 画像をポアソン合成
+/// 画像読み込んだとき最初に実行する関数
 void PoissonImageSynthesis::poisson()
 {
-	//cv::resize(base, base, cv::Size(), 0.5, 0.5, cv::INTER_AREA);
-	//cv::resize(blend, blend, cv::Size(), 0.5, 0.5, cv::INTER_AREA);
-	//cv::resize(mask, mask, cv::Size(), 0.5, 0.5, cv::INTER_AREA);
 	cv::Point2i offset(0, 0);
 
 	lMax = ui.spinBox->value();
@@ -204,17 +237,18 @@ void PoissonImageSynthesis::poisson()
 	cv::imwrite("結果-Import.png", dst[1]);
 }
 
-// リセットボタン
+/// リセットボタン
 void PoissonImageSynthesis::on_resetButton_clicked()
 {
+	// ループ1回だけ回す
 	poissonSolver(1, base, blend, dst[0], mask, true);
 	drawForQtLabel(dst[0], ui.labelMix, true);
-
+	// ループ1回だけ回す
 	poissonSolver(1, base, blend, dst[1], mask, false);
 	drawForQtLabel(dst[1], ui.labelImp, true);
 }
 
-// 更新ボタン
+/// 更新ボタン
 void PoissonImageSynthesis::on_iterateButton_clicked()
 {
 	cv::Point2i offset(0, 0);
@@ -230,7 +264,7 @@ void PoissonImageSynthesis::on_iterateButton_clicked()
 	cv::imwrite("結果-Import.png", dst[1]);
 }
 
-// 画像をラベルに描画
+/// 画像をラベルに描画
 void PoissonImageSynthesis::drawForQtLabel(cv::Mat &src, QLabel *label, bool autoResize)
 {
 	// エラー処理
