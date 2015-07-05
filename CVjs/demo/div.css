@@ -1,0 +1,104 @@
+/* --- 全体 --- */
+html,body {
+	padding: 0px;
+	background-color: #f3f3f3;
+	width: 98%;
+	height: 98%;
+}
+
+/* コンテナ */
+div#container {
+	width: 100%;
+	height: 100%;
+	margin: 0 auto; /* センタリング */
+}
+
+/* ヘッダーとフッターの中身 */
+div#inner {
+	display: table-cell;
+	width: 100%;
+	height: 100%;
+	padding-left: 10px;
+	vertical-align: middle;
+	font-size: 1.5em;
+	color: #eeffee;
+	font-weight: 600;
+	text-shadow:3px 3px 2px #99ffff;
+}
+
+/* ヘッダー */
+div#header {
+	display: table;
+	background-color: #555555;
+	width: 100%;
+	height: 8%;
+	clear: both;
+}
+
+/* 左ペイン */
+div#left {
+	display: table;
+	background-color: #ffffff;
+	float: left;
+	width: 50%;
+	height: 100%;
+}
+div#inner-left {
+	display: table-cell;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 1.5em;
+}
+
+/* 右ペイン */
+div#right {
+	display: table;
+	background-color: #00efef;
+	float: right;
+	width: 50%;
+	height: 100%;
+}
+
+/* フッター */
+div#footer {
+	display: table;
+	background-color: #555555;
+	width: 100%;
+	height: 10%;
+	clear: both;
+}
+
+/* センター */
+div#center {
+	background-color: #ff0000;
+	width: 80%;
+	height: 76%;
+	margin: 0 auto; /* センタリング */
+}
+
+/* コンテンツ */
+div#cont {
+	background-color: #aaccff;
+}
+
+/* 色情報 */
+div#info {
+	background-color: #88aadd;
+	float: left;
+	width: 350px;
+	height: 19px;
+}
+
+/* ヒストグラム */
+div#hist {
+	background-color: #aaccff;
+}
+
+canvas#img {
+	float: left; 
+}
+canvas#outputImg {
+	float: left; 
+}

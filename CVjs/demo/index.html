@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+    <link rel="stylesheet" type="text/css" href="div.css">
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-43133177-1', 'atpages.jp');
+        ga('send', 'pageview');
+    </script>
+    <script src="./js.js"></script>
+
+    <title>
+        HTML5で画像処理
+    </title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <div id="inner">
+                画像加工・画像処理
+            </div>
+        </div>
+        ローカルから画像を読み込み<br>
+        <font size="2">
+            <i>描画エリアにローカルの画像をドラッグ＆ドロップして下さい。</i><br>
+            ※画像はサーバに保存されたりはしません。<br>
+            ↓ここからファイルを指定しても読み込めます。
+        </font><br>
+        <input type="file" id="loadImg" onchange="loadImg()">
+        <button onclick="loadImg()" id="update">読み込み</button>
+        <output id="list"></output>
+        <hr>
+        <div id="cont">
+            <button onclick="init();" id="init">最初に戻す</button>
+            <a href="http://www47.atpages.jp/sensq/blog/2014/01/25/603/"><i>使い方</i></a>
+            <a href="http://www47.atpages.jp/sensq/blog/2013/10/26/445/"><i>詳しい解説</i></a>
+            <br>
+            <div id="menu">
+                Menu：<button onclick="menu.all();" id="Mall">ALL</button>
+                <label><input type="checkbox" onclick="menu('siki');" id="Msiki">色調</label>
+                <label><input type="checkbox" onclick="menu('edge');" id="Medge">エッジ</label>
+                <label><input type="checkbox" onclick="menu('pix');" id="Mpix">平滑化</label>
+                <label><input type="checkbox" onclick="menu('hsv');" id="Mhsv">HSV</label>
+                <label><input type="checkbox" onclick="menu('kido');" id="Mkido">輝度</label>
+                <label><input type="checkbox" onclick="menu('kika');" id="Mkika">反転</label>
+                <label><input type="checkbox" onclick="menu('custom');" id="Mcustom">カスタムフィルタ</label>
+                <label><input type="checkbox" onclick="menu('histogram');" id="Mhistogram">ヒストグラム</label>
+            </div>
+            <hr>
+            <div id="siki">
+                <font size="2">色調：</font>
+                <button onclick="negaposi();" id="negaposi">ネガポジ反転</button>
+                <button onclick="gray();" id="gray">グレースケール</button>
+                <button onclick="sepia();" id="sepia">セピア調</button>
+
+                <button onclick="contrast();" id="contrast">コントラスト</button>
+                <input type="text" id="thresholdContrast" size="3" step="1" onchange="contrast();" placeholder="70"><font size="2">閾値</font>
+
+                <button onclick="decreaseColor();" id="decreaseColor">減色</button>
+                <select name="colorBit" id="colorBit">
+                    <option onclick="decreaseColor();" value="1">1</option>
+                    <option onclick="decreaseColor();" value="2">2</option>
+                    <option onclick="decreaseColor();" value="3">3</option>
+                    <option onclick="decreaseColor();" value="4">4</option>
+                    <option onclick="decreaseColor();" value="5">5</option>
+                    <option onclick="decreaseColor();" value="6">6</option>
+                    <option onclick="decreaseColor();" value="7">7</option>
+                </select>
+                <font size="2">各色のbit数</font>
+
+                <button onclick="binary();" id="binary">二値化</button>
+                <input type="text" id="threshold" size="3" step="1" onchange="CV.binary();" placeholder="160"><font size="2">閾値</font>
+
+                <button onclick="rgb('R');" id="rgb_R">赤フィルター</button>
+                <button onclick="rgb('G');" id="rgb_G">緑フィルター</button>
+                <button onclick="rgb('B');" id="rgb_B">青フィルター</button>
+            </div>
+            <div id="edge" style="display:none">
+                <font size="2">エッジ検出：</font>
+                <button onclick="edge();" id="edge">4近傍</button>
+                <button onclick="edge2();" id="edge2">8近傍</button>
+                <button onclick="sobel();" id="sobel">ソーベル</button>
+                <input type="number" id="course" size="1" min="0" max="9" onchange="sobel();" placeholder="8">
+                開始方向（テンキーの数字の位置に対応）
+            </div>
+            <div id="pix">
+                <font size="2">平滑化：</font>
+                <button onclick="median();" id="median">メディアン</button>
+                <button onclick="smoothing(3);" id="smoothing">平滑化(3x3)</button>
+                <button onclick="smoothing(5);" id="smoothing5">5</button>
+                <button onclick="smoothing(7);" id="smoothing7">7</button>
+                <button onclick="gaussian();" id="gaussian3">ガウシアン(3x3)</button>
+                <button onclick="gaussian2();" id="gaussian5">5</button>
+                <button onclick="shuffle(3);" id="shuffle3">シャッフル(3x3)</button>
+                <button onclick="shuffle(5);" id="shuffle5">5</button>
+                <button onclick="shuffle(7);" id="shuffle7">7</button>
+                <br>
+                <button onclick="pixelization(3);" id="pixelization">モザイク(3x3)</button>
+                <button onclick="pixelization(7);" id="pixelization5">7</button>
+                <button onclick="pixelization(25);" id="pixelization7">25</button>
+                <button onclick="motionblur(5, 'horizon');" id="blurH">水平ブラー(5x5)</button>
+                <button onclick="motionblur(11, 'horizon');" id="blurH">11</button>
+                <button onclick="motionblur(5, 'tiltL');" id="blurL">左斜めブラー(5x5)</button>
+                <button onclick="motionblur(11, 'tiltL');" id="blurL">11</button>
+                <button onclick="sharp();" id="sharp">シャープ</button>
+                <input type="text" id="sharpValue" size="2" step="1" onchange="CV.sharp();" placeholder="1"><font size="2">強さ</font>
+            </div>
+            <div id="hsv">
+                <font size="2">HSV：</font>
+                <button onclick="hsv.Hue();" id="hue">H増減</button>
+                <input type="text" id="hueValue" size="3" step="1" onchange="hsv.Hue();" placeholder="60"><font size="2">H</font>
+                <button onclick="hsv.Sat();" id="sat">S増減</button>
+                <input type="text" id="satValue" size="3" step="1" onchange="hsv.Sat();" placeholder="20"><font size="2">S</font>
+                <button onclick="hsv.Vol();" id="vol">V増減</button>
+                <input type="text" id="volValue" size="3" step="1" onchange="hsv.Vol();" placeholder="20"><font size="2">V</font>
+                <br>
+                <font size="2">色抽出：</font>
+                <button onclick="hsv.Cut();" id="cut">カット</button>
+                <button onclick="hsv.White();" id="white">白色化</button>
+                <button onclick="hsv.Black();" id="black">黒色化</button>
+                <button onclick="hsv.extractH();" id="extractH">色相変換</button>
+                <input type="number" id="convHValue" size="3" min="0" step="10" placeholder="45" onchange="hsv.extractH();"><font size="2">増分</font>
+                <button onclick="hsv.extractS();" id="extractS">彩度変換</button>
+                <input type="number" id="convSValue" size="3" min="0" step="10" placeholder="20" onchange="hsv.extractS();"><font size="2">増分</font>
+                <button onclick="hsv.extractV();" id="extractV">明度変換</button>
+                <input type="number" id="convVValue" size="3" min="0" step="10" placeholder="20" onchange="hsv.extractV();"><font size="2">増分</font>
+                <br>
+                <font size="2">抽出範囲：</font>
+                H：
+                <input type="text" id="hueStart" size="3" step="1" placeholder="80"><font size="2">-</font>
+                <input type="text" id="hueEnd" size="3" step="1" placeholder="180"><font size="2"></font>
+                S：
+                <input type="text" id="satStart" size="3" step="1" placeholder="100"><font size="2">-</font>
+                <input type="text" id="satEnd" size="3" step="1" placeholder="255"><font size="2"></font>
+                V：
+                <input type="text" id="volStart" size="3" step="1" placeholder="80"><font size="2">-</font>
+                <input type="text" id="volEnd" size="3" step="1" placeholder="255"><font size="2"> ※出力画像クリックで自動入力</font>
+            </div>
+            <div id="kido">
+                <font size="2">輝度：</font>
+                <button onclick="gamma();" id="gammaLUT">γ補正</button>
+                <input type="number" id="gammaValue" size="3" min="0" step="0.05" onchange="gamma();" placeholder="1.5"><font size="2">γ値</font>
+                <button onclick="bright();" id="bright">明暗</button>
+                <input type="number" id="brightValue" size="3" min="0" onchange="bright();" placeholder="150">%
+                <button onclick="transparent();" id="transparent">透過</button>
+                <input type="number" id="opacity" size="3" min="0" max="255" onchange="transparent();" placeholder="128"><font size="2">閾値</font>
+
+                <button onclick="blend();" id="blend">ブレンド（左×右）</button>
+                <select name="BlendType" id="BlendType">
+                    <option onclick="blend();" value="add">加算</option>
+                    <option onclick="blend();" value="diff">減算</option>
+                    <option onclick="blend();" value="exclusion">除外</option>
+                    <option onclick="blend();" value="abs">差の絶対値</option>
+                    <option onclick="blend();" value="multi">乗算</option>
+                    <option onclick="blend();" value="burn">焼き込み</option>
+                    <option onclick="blend();" value="screen">スクリーン</option>
+                    <option onclick="blend();" value="dodge">覆い焼き</option>
+                    <option onclick="blend();" value="overlay">オーバーレイ</option>
+                    <option onclick="blend();" value="soft">ソフトライト</option>
+                    <option onclick="blend();" value="hard">ハードライト</option>
+                    <option onclick="blend();" value="linear">リニアライト</option>
+                    <option onclick="blend();" value="pin">ピンライト</option>
+                </select>
+            </div>
+            <div id="custom">
+                <font size="2">カスタムフィルタ：</font>
+                <button onclick="custom();" id="custom">実行</button>
+                <button onclick="customReset();" id="customReset">リセット</button>
+                <select name="filter" onchange="selectFilter(this)">
+                    <option value="">フィルタを選択</option>
+                    <option value="">ネガポジ</option>
+                    <option value="">ガウシアン</option>
+                    <option value="">シャープ</option>
+                    <option value="">ブラー</option>
+                    <option value="">エンボス</option>
+                    <option value="">コントラスト+25%</option>
+                    <option value="">コントラスト-25%</option>
+                </select>
+                <br />
+                <font size="2">スケール：</font><input type="text" id="customScale" size="3" onchange="custom();" placeholder="0" value="1">
+                <font size="2">オフセット：</font><input type="text" id="customOffset" size="3" onchange="custom();" placeholder="0" value="0"><br />
+
+                <input type="text" id="custom11" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom12" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom13" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom14" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom15" size="3" onchange="custom();" placeholder="0" value="0"><br />
+                <input type="text" id="custom21" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom22" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom23" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom24" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom25" size="3" onchange="custom();" placeholder="0" value="0"><br />
+                <input type="text" id="custom31" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom32" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom33" size="3" onchange="custom();" placeholder="0" value="1">
+                <input type="text" id="custom34" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom35" size="3" onchange="custom();" placeholder="0" value="0"><br />
+                <input type="text" id="custom41" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom42" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom43" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom44" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom45" size="3" onchange="custom();" placeholder="0" value="0"><br />
+                <input type="text" id="custom51" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom52" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom53" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom54" size="3" onchange="custom();" placeholder="0" value="0">
+                <input type="text" id="custom55" size="3" onchange="custom();" placeholder="0" value="0">
+            </div>
+            <div id="kika" style="display:none">
+                <font size="2">反転：</font>
+                <button onclick="hmirror();" id="hmirror">水平反転</button>
+                <button onclick="vmirror();" id="vmirror">垂直反転</button>
+            </div>
+            <div id="histogram">
+            </div>
+            <hr>
+            <div id="other">
+                <label>
+                    <input type="checkbox" id="divHidden" onchange="divHidden();">
+                    入力側を非表示
+                </label>
+                <label><input type="checkbox" id="change" onchange="CV.change('img', 'outputImg');">入出力の位置入替</label>
+                <label><input type="checkbox" id="resize">読込時に強制リサイズ</label>
+                <label><input type="checkbox" id="copy">重ね掛け</label>
+                <button onclick="histogram();" id="histogram">ヒストグラム再計算</button>
+                <button onclick="undo();" id="undo">戻る</button>
+                <button onclick="redo();" id="redo">やり直す</button>
+                <button onclick="CV.save();" id="save">保存</button>
+            </div>
+            <div id="info">
+                R:0　G:0　B:0　A:0　　H:0　S:0　V:0
+            </div>
+            <div id="dummy">　</div>
+        </div>
+        <hr>
+        <canvas id="img">
+            お使いのブラウザには対応していません。<br>
+            Chrome, Firefox, Opera, Safariでの動作は確認しています。<br>
+            PCが古すぎる可能性もあります。
+        </canvas>
+        <canvas id="outputImg">
+            画像描画領域
+        </canvas>
+        <canvas id="tst">
+            画像描画領域
+        </canvas>
+    </div>
+</body>
+</html>
