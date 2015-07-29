@@ -1,0 +1,91 @@
+/* --- 全体 --- */
+html,body {
+	background-color: #fcfcfc;
+	/* 画面に収まっていればスクロールバーを出さないように */
+	width: 98%;
+	height: 98%;
+	padding: 0px;
+}
+
+/* コンテナ */
+#container {
+	width: 100%;
+	height: 100%;
+	margin: 0 auto; /* センタリング */
+}
+
+/* センター */
+#center {
+	background-color: #ff0000;
+	width: 90%;
+	height: 80%;
+	margin: 0 auto; /* センタリング */
+}
+
+/* 描画領域 */
+#draw_area{
+	background-color: #EEEEEE;
+	float: left;
+	width: 60%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	overflow: hidden;
+	border: none;
+	cursor: default;
+}
+
+/* 右カラム */
+/* 縦センタリング用*/
+#right {
+	display: table;
+	background-color: #00efef;
+	float: right;
+	width: 40%;
+	height: 100%;
+}
+/* 中身 */
+#right #inner-right {
+	display: table-cell;
+	width: 100%;
+	height: 100%;
+	text-align: left;
+	vertical-align: middle;
+	padding: 5px;
+	font-size: 0.95em;
+}
+
+/* ヘッダー */
+#header {
+	display: table;
+	background-color: #555555;
+	width: 100%;
+	height: 10%;
+	clear: both;
+}
+
+/* フッター */
+#footer {
+	display: table;
+	background-color: #555555;
+	width: 100%;
+	height: 10%;
+	clear: both;
+}
+
+/* ヘッダーとフッターの中身用 */
+#inner {
+	display: table-cell;
+	width: 100%;
+	height: 100%;
+	padding-left: 10px;
+	color: #eeffee;
+	vertical-align: middle;
+	font-size: 1.5em;
+	font-weight: 600;
+	text-shadow:3px 3px 2px #99ffff;
+}
+
+#dat {
+	display: table-cell;
+}

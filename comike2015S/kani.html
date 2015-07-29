@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<link rel="stylesheet" type="text/css" href="div.css">
+	<script src="./util/myTemplate.js"></script>
+	<script src="./kani.js"></script>
+	<script>
+	if(!Detector.webgl) Detector.addGetWebGLMessage();
+	</script>
+
+	<title>
+		簡易版Runge-Kutta
+	</title>
+</head>
+	
+<body onload="threeStart();">
+	<div id="container">
+		<div id="header">
+			<div id="inner">
+				簡易版Runge-Kutta
+			</div>
+		</div>
+		
+		<div id="center">
+			<div id="draw_area">
+			</div>
+			
+			<div id="right">
+				<div id="inner-right">
+					<form name="box">
+						 x：<input type="text" name="x" id="x" size="7"><br>
+						 y：<input type="text" name="y" id="y" size="7"><br>
+						 z：<input type="text" name="x" id="z" size="7"><br>
+						vx：<input type="text" name="y" id="vx" size="7"><br>
+						vy：<input type="text" name="x" id="vy" size="7"><br>
+						vz：<input type="text" name="y" id="vz" size="7"><br>
+						dt：<input type="text" name="dt" id="dt" size="5"><br>
+					</form><br>
+					回転するようにしてあります。<br>
+				</div>
+			</div>
+		</div>
+		
+		<div id="footer">
+			<div id="inner">
+			</div>
+		</div>
+	</div>
+</body>
+</html>
