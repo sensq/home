@@ -22,13 +22,11 @@ function Get-ParametersListFromFile{
     $context = Get-Content $file_path -encoding String
     
     # セクションの区切り文字
-    Set-Variable open_delimiter -Option AllScope
-    Set-Variable close_delimiter -Option AllScope
+    Set-Variable delimiter -Option AllScope
     Set-Variable split_symbol -Option AllScope
     Set-Variable comment_symbol -Option AllScope
     Set-Variable comment_delimiter -Option AllScope
-    $open_delimiter = "^\[(.*)\]$"
-    $close_delimiter = "^\[/(.*)\]$"
+    $delimiter = "^\[(.*)\]$"
     $comment_symbol = "#"
     $comment_delimiter = (".*\s+" + $comment_symbol + ".*")
     $split_symbol = ":"
@@ -66,25 +64,22 @@ function Get-ParametersListFromFile{
     # 各セクションのオブジェクトを生成し、開始行と終了行を取得
     function search_rows{
         $now_row = 0
+        $save_tmp = $null    # 前回の区切り文字を保持しておく変数
         foreach($row in $context){
             # 区切り文字の存在判定
-            if($row -match $open_delimiter){
-                # 開始行の場合
-                if($row -notmatch $close_delimiter){
-                    $section_info = $row -replace $open_delimiter, '$1'
-
-                    generate_object $section_info
-
-                    $section = $section_info.Split($split_symbol)[0]
-                    (($param_objs).$section).start_row = $now_row
+            if($row -match $delimiter){
+                # 前回の変数の終了行を取得
+                if($save_tmp -ne $null){
+                    (($param_objs).$save_tmp).end_row = ($now_row - 1)
                 }
-                # 終了行の場合
-                else{
-                    $section_info = $row -replace $close_delimiter, '$1'
 
-                    $section = $section_info.Split($split_symbol)[0]
-                    (($param_objs).$section).end_row = $now_row
-                }
+                $section_info = $row -replace $delimiter, '$1'
+                
+                generate_object $section_info
+                
+                $section = $section_info.Split($split_symbol)[0]
+                $save_tmp = $section
+                (($param_objs).$section).start_row = $now_row
             }
             $now_row++
         }
