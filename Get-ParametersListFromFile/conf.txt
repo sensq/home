@@ -1,22 +1,22 @@
-[yamanote:ŽRŽèü]
-H—tŒ´
-_“c
-“Œ‹ž
-—LŠy’¬
-V‹´
-[curry:ƒJƒŒ[‚ÌÞ—¿]
-ƒ‹[
-‚¶‚á‚ª‚¢‚à
-‚è‚ñ‚²
-‹Ê‚Ë‚¬
-lŽQ
-#“Ø“÷
-‹“÷
+[yamanote:å±±æ‰‹ç·š]
+ç§‹è‘‰åŽŸ
+ç¥žç”°
+æ±äº¬
+æœ‰æ¥½ç”º
+æ–°æ©‹
+[curry:ã‚«ãƒ¬ãƒ¼ã®ææ–™]
+ãƒ«ãƒ¼
+ã˜ã‚ƒãŒã„ã‚‚
+ã‚Šã‚“ã”
+çŽ‰ã­ãŽ
+äººå‚
+#è±šè‚‰
+ç‰›è‚‰
 
 [diary_0821]
-E‰Æ‚Ì‘|œ
-EPowershell—V‚Ñ
-Eqiita‚Ì‹LŽ–‚ð‘‚­
+ãƒ»å®¶ã®æŽƒé™¤
+ãƒ»PowershelléŠã³
+ãƒ»qiitaã®è¨˜äº‹ã‚’æ›¸ã
 
 [aaa]
 #[bbb]
@@ -25,21 +25,21 @@ test_a
 test_b
 
 
-[home_network:Ž©‘îIPƒŠƒXƒg]
-192.168.1.1 #ƒƒCƒ“
-192.168.1.2 #ƒm[ƒg
-192.168.1.3 #–³üAP
+[home_network:è‡ªå®…IPãƒªã‚¹ãƒˆ]
+192.168.1.1 #ãƒ¡ã‚¤ãƒ³
+192.168.1.2 #ãƒŽãƒ¼ãƒˆ
+192.168.1.3 #ç„¡ç·šAP
 
-[esx_ip:ESX‚ÌIP]
+[esx_ip:ESXã®IP]
 192.168.1.100
 
 
-[vm_ip:‰¼‘zŠÂ‹«IPƒŠƒXƒg]
+[vm_ip:ä»®æƒ³ç’°å¢ƒIPãƒªã‚¹ãƒˆ]
 192.168.1.101
 192.168.1.102
 192.168.1.103
 192.168.1.200
-[vm_pass:‰¼‘zŠÂ‹«ƒpƒXƒ[ƒhƒŠƒXƒg]
+[vm_pass:ä»®æƒ³ç’°å¢ƒãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆ]
 password
 p@ssw0rd
 pass
