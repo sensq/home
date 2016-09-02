@@ -63,9 +63,13 @@ function Get-ParametersListFromFile{
 
     # 各セクションのオブジェクトを生成し、開始行と終了行を取得
     function search_rows{
-        $now_row = 0
+        $now_row = 1
         $save_tmp = $null    # 前回の区切り文字を保持しておく変数
         foreach($row in $context){
+            # EOFの場合
+            if($now_row -eq ($context.Length)){
+                (($param_objs).$save_tmp).end_row = ($now_row - 1)
+            }
             # 区切り文字の存在判定
             if($row -match $delimiter){
                 # 前回の変数の終了行を取得
@@ -89,15 +93,18 @@ function Get-ParametersListFromFile{
     function get_params{
         search_rows
         foreach($key in $param_objs.Keys){
-            for($i = $param_objs.$key.start_row+1; $i -lt $param_objs.$key.end_row; $i++){
+            for($i = $param_objs.$key.start_row; $i -lt $param_objs.$key.end_row; $i++){
                 $param = $context[$i]
                 # 行頭にコメントアウト記号が書かれていたら除外
                 if($param -notmatch ("^" + $comment_symbol)){
+                    # 途中に空白(一つ以上)+コメントアウト記号が書かれていたら空白以降を除外
                     if($param -match $comment_delimiter){
-                        # 途中に空白(一つ以上)+コメントアウト記号が書かれていたら空白以降を除外
                         $param = $param.Split($comment_symbol)[0]
                     }
-                    $param_objs.$key.params += $param
+                    # 空行で無ければ値を配列に追加
+                    if($param.Length -ne 0){
+                        $param_objs.$key.params += $param
+                    }
                 }
             }
         }
@@ -106,11 +113,10 @@ function Get-ParametersListFromFile{
     ### メイン実行 ###
     get_params
 
-
     ### 表示 ###
-    foreach($section in $param_objs.Keys){
-        Write-Output ("＜" + $param_objs.$section.name + "＞")
-        Write-Output $param_objs.$section.params
+    foreach($key in $param_objs.Keys){
+        Write-Output ("＜" + $param_objs.$key.name + "＞")
+        Write-Output $param_objs.$key.params
         Write-Output ""
     }
 
